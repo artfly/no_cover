@@ -1,8 +1,8 @@
 import sqlite3
 import csv
 
-def create_db(cur):
-    cur.execute('CREATE TABLE IF NOT EXISTS books(title, author, short_text, PRIMARY KEY (title, author))')
+def create_db(cur: sqlite3.Cursor):
+    cur.execute('CREATE TABLE IF NOT EXISTS books(id INTEGER PRIMARY KEY AUTOINCREMENT, title, author, short_text)')
 
 def add_books(cur: sqlite3.Cursor):
     with open('books.csv', encoding='utf-8') as f:
@@ -12,7 +12,7 @@ def add_books(cur: sqlite3.Cursor):
             author = book['author'].strip()
             short_text = book['short_text'].strip()
             vals = ", ".join([f'"{x}"' for x in (title, author, short_text)])
-            cur.execute(f'INSERT INTO books VALUES ({vals});')
+            cur.execute(f'INSERT INTO books(title, author, short_text) VALUES ({vals});')
 
 if __name__ == '__main__':
     con = sqlite3.connect("no_cover.db")
