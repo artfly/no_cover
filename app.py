@@ -1,4 +1,4 @@
-from flask import Flask, logging
+from flask import Flask, logging, render_template
 from db import get_db, close_db
 import sqlite3
 import random
@@ -19,6 +19,6 @@ def show_book():
     n_rows = req.fetchone()[0]
     n_row = random.randint(0, n_rows)
     req = db.cursor().execute(f"SELECT short_text FROM books ORDER BY RANDOM() LIMIT 1")
-    short_text = req.fetchone()[0]
+    short_text = req.fetchone()[0].replace('\n', '<br/>')
     log.error(short_text.count('\n'))
-    return short_text
+    return render_template("book.html", short_text = short_text)
