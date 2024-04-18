@@ -13,3 +13,4 @@ Example app on how to work with flask and sqlite.
 - https://flask.palletsprojects.com/en/3.0.x/quickstart/
 - https://flask.palletsprojects.com/en/3.0.x/tutorial/
 - https://www.w3schools.com/bootstrap/bootstrap_get_started.asp
+- https://getbootstrap.com/docs/4.0/examples/

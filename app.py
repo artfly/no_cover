@@ -18,7 +18,14 @@ def show_book():
     req = cur.execute("SELECT COUNT(*) FROM books")
     n_rows = req.fetchone()[0]
     n_row = random.randint(0, n_rows)
-    req = db.cursor().execute(f"SELECT short_text FROM books ORDER BY RANDOM() LIMIT 1")
-    short_text = req.fetchone()[0].replace('\n', '<br/>')
+    req = db.cursor().execute(f"SELECT author, title, short_text FROM books ORDER BY RANDOM() LIMIT 1")
+    book_data = req.fetchone()
+    author = book_data[0]
+    title = book_data[1]
+    short_text = book_data[2].replace('\n', '<br/>')
     log.error(short_text.count('\n'))
-    return render_template("book.html", short_text = short_text)
+    return render_template("book.html", short_text = short_text, author=author, title=title)
+
+@app.get('/')
+def index():
+    return render_template("index.html")
