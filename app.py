@@ -1,5 +1,5 @@
-from flask import Flask, logging, render_template
-from db import get_db, close_db
+from flask import Flask, logging, render_template, redirect, request, session, url_for
+from db import get_db, close_db, hash_pwd
 import sqlite3
 import random
 
@@ -25,6 +25,30 @@ def show_book():
     short_text = book_data[2].replace('\n', '<br/>')
     log.error(short_text.count('\n'))
     return render_template("book.html", short_text = short_text, author=author, title=title)
+
+@app.get("/login")
+def login_form():
+    return render_template("login.html")
+
+@app.post("/login")
+def login():
+    username = request.form['username']
+    password = request.form['password']
+    db = get_db()
+    error = None
+    user = db.execute(f'SELECT * FROM users WHERE name = "{username}"').fetchone()
+
+    if user is None:
+        error = 'Incorrect username.'
+    elif hash_pwd(password) != user[1]:
+        error = 'Incorrect password.'
+
+    if error is None:
+        session.clear()
+        session['user_id'] = user[0]
+        return redirect(url_for('index'))
+    else:
+        return error, 403
 
 @app.get('/')
 def index():
