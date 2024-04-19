@@ -5,6 +5,7 @@ from db import hash_pwd
 def create_db(cur: sqlite3.Cursor):
     cur.execute('CREATE TABLE IF NOT EXISTS books(id INTEGER PRIMARY KEY AUTOINCREMENT, title, author, short_text)')
     cur.execute('CREATE TABLE IF NOT EXISTS users(name PRIMIARY KEY, password)')
+    cur.execute('CREATE TABLE IF NOT EXISTS disliked_authors(id INTEGER PRIMARY KEY AUTOINCREMENT, username, author, FOREIGN KEY (username) REFERENCES users(name))')
 
 def add_books(cur: sqlite3.Cursor):
     with open('books.csv', encoding='utf-8') as f:

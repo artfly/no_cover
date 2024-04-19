@@ -15,16 +15,29 @@ log = logging.create_logger(app)
 def show_book():
     db = get_db()
     cur: sqlite3.Cursor = db.cursor()
-    req = cur.execute("SELECT COUNT(*) FROM books")
-    n_rows = req.fetchone()[0]
-    n_row = random.randint(0, n_rows)
-    req = db.cursor().execute(f"SELECT author, title, short_text FROM books ORDER BY RANDOM() LIMIT 1")
+    username = session.get("user_id", "")
+    req = db.cursor().execute(f'''
+    SELECT author, title, short_text FROM books WHERE 
+    author NOT IN (SELECT author FROM disliked_authors WHERE username = "{username}")
+    ORDER BY RANDOM() LIMIT 1
+    ''')
     book_data = req.fetchone()
     author = book_data[0]
     title = book_data[1]
     short_text = book_data[2].replace('\n', '<br/>')
     log.error(short_text.count('\n'))
     return render_template("book.html", short_text = short_text, author=author, title=title)
+
+@app.post('/dislike/<author>')
+def dislike_author(author):
+    user_id = session.get("user_id", None)
+    if not user_id:
+        return 403, "Not logged in"
+    db = get_db()
+    cur: sqlite3.Cursor = db.cursor()
+    cur.execute(f'INSERT INTO disliked_authors(username, author) VALUES ("{user_id}", "{author}")')
+    db.commit()
+    return redirect(url_for('show_book'))
 
 @app.get("/login")
 def login_form():

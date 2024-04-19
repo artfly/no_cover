@@ -18,9 +18,16 @@
     {{short_text|safe}}
 </div>
 <div class="jumbotron text-center">
-<div class="btn-group">
-<button type="button" class="btn btn-success" data-toggle="modal" data-target="#bookModal">Что за книга?</button>
-<button type="button" class="btn btn-info" data-mdb-ripple-init onclick="location.href='book'">К следующей &gt;&gt;</button>
+<div class="form-group">
+    <form method="post" action="/dislike/{{author}}">
+    <button type="submit" class="btn btn-danger" data-mdb-ripple-init>Дислайк автору</button>
+    </form>
+    <form method="get" data-toggle="modal" data-target="#bookModal">
+<button type="button" class="btn btn-success" >Что за книга?</button>
+    </form>
+    <form method="get" action="/book">
+<button type="submit" class="btn btn-info" data-mdb-ripple-init onclick="location.href='book'">К следующей &gt;&gt;</button>
+        </form>
 </div>
 </div>
 
